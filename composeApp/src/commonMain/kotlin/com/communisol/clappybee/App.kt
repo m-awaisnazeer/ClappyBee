@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -192,7 +194,7 @@ fun App() {
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "START",
-                        fontSize = MaterialTheme.typography.displayMedium.fontSize,
+                        fontSize = MaterialTheme.typography.displaySmall.fontSize,
                         fontFamily = ChewyFontFamily()
                     )
                 }
@@ -211,6 +213,34 @@ fun App() {
                     fontSize = MaterialTheme.typography.displayMedium.fontSize,
                     fontFamily = ChewyFontFamily()
                 )
+                Text(
+                    text = "Score: 0",
+                    color = Color.White,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    fontFamily = ChewyFontFamily()
+                )
+                Spacer(Modifier.height(24.dp))
+                Button(modifier = Modifier.wrapContentSize(),
+                    shape = RoundedCornerShape(size = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = orange
+                    ),
+                    onClick = {
+                        game.restart()
+                        spriteState.start()
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "RESTART",
+                        fontSize = MaterialTheme.typography.displaySmall.fontSize,
+                        fontFamily = ChewyFontFamily()
+                    )
+                }
             }
         }
     }
