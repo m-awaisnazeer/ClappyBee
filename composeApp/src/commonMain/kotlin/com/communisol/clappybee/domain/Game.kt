@@ -14,7 +14,7 @@ data class Game(
     val beeJumpImpulse: Float = -12f,
     val beeMaxVelocity: Float = 25f,
     val pipeWidth: Float = 150f,
-    val pipeVelocity: Float = 5f,
+    val pipeVelocity: Float = 2f,
     val pipeGapSize: Float = 250f
 ) {
     var status by mutableStateOf(GameStatus.Idle)
