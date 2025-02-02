@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
@@ -67,6 +68,7 @@ import com.stevdza_san.sprite.component.drawSpriteView
 import com.stevdza_san.sprite.domain.SpriteSheet
 import com.stevdza_san.sprite.domain.SpriteSpec
 import com.stevdza_san.sprite.domain.rememberSpriteState
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -123,6 +125,7 @@ fun App() {
             }
         }
 
+        val scope = rememberCoroutineScope()
         val backgroundOffsetX = remember {
             Animatable(0f)
         }
@@ -265,14 +268,14 @@ fun App() {
         ) {
 
             Text(
-                text = "BEST : 0",
+                text = "BEST : ${game.bestScore}",
                 fontSize = MaterialTheme.typography.displaySmall.fontSize,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ChewyFontFamily()
             )
 
             Text(
-                text = "0",
+                text = "${game.currentScore}",
                 fontSize = MaterialTheme.typography.displaySmall.fontSize,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ChewyFontFamily()
@@ -323,7 +326,7 @@ fun App() {
                     fontFamily = ChewyFontFamily()
                 )
                 Text(
-                    text = "Score: 0",
+                    text = "Score: ${game.currentScore}",
                     color = Color.White,
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     fontFamily = ChewyFontFamily()
@@ -337,6 +340,9 @@ fun App() {
                     onClick = {
                         game.restart()
                         spriteState.start()
+                        scope.launch {
+                            backgroundOffsetX.snapTo(0f)
+                        }
                     }) {
                     Icon(
                         imageVector = Icons.Default.Refresh,

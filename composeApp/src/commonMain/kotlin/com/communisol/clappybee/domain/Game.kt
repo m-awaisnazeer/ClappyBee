@@ -4,7 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.russhwolf.settings.ObservableSettings
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.random.Random
+
+const val SCORE_KEY = "score"
 
 data class Game(
     val screenWidth: Int = 0,
@@ -16,7 +21,8 @@ data class Game(
     val pipeWidth: Float = 150f,
     val pipeVelocity: Float = 2f,
     val pipeGapSize: Float = 350f
-) {
+) : KoinComponent {
+    private val settings: ObservableSettings by inject()
     var status by mutableStateOf(GameStatus.Idle)
         private set
     var beeVelocity by mutableStateOf(0f)
@@ -29,6 +35,18 @@ data class Game(
         private set
 
     var pipePairs = mutableStateListOf<PipePair>()
+    var currentScore by mutableStateOf(0)
+        private set
+
+    var bestScore by mutableStateOf(0)
+        private set
+
+    init {
+        bestScore = settings.getInt(SCORE_KEY, 0)
+        settings.addIntListener(key = SCORE_KEY, defaultValue = 0) {
+            bestScore = it
+        }
+    }
 
     fun start() {
         status = GameStatus.Started
@@ -36,6 +54,14 @@ data class Game(
 
     fun gameOver() {
         status = GameStatus.Over
+        saveScore()
+    }
+
+    private fun saveScore() {
+        if (bestScore < currentScore) {
+            settings.putInt(SCORE_KEY, currentScore)
+            bestScore = currentScore
+        }
     }
 
     fun jump() {
@@ -46,12 +72,16 @@ data class Game(
         resetBeePosition()
         removePipes()
         start()
+        resetScore()
     }
 
     private fun removePipes() {
         pipePairs.clear()
     }
 
+    private fun resetScore(){
+        currentScore = 0
+    }
     private fun resetBeePosition() {
         bee = bee.copy(
             y = (screenHeight / 2).toFloat()
@@ -64,6 +94,11 @@ data class Game(
             if (isCollision(it)) {
                 gameOver()
                 return
+            }
+
+            if (!it.scored && bee.x > it.x + pipeWidth / 2) {
+                it.scored = true
+                currentScore++
             }
         }
         if (bee.y < 0) {
@@ -106,16 +141,14 @@ data class Game(
         val beeLeftEdge = bee.x - bee.radius
         val pipeLeftEdge = pipePair.x - pipeWidth / 2
         val pipeRightEdge = pipePair.x + pipeWidth / 2
-        val horizontalCollision = beeRightEdge > pipeLeftEdge
-                && beeLeftEdge < pipeRightEdge
+        val horizontalCollision = beeRightEdge > pipeLeftEdge && beeLeftEdge < pipeRightEdge
 
         // Check if bee is within the vertical gap.
         val beeTopEdge = bee.y - bee.radius
         val beeBottomEdge = bee.y + bee.radius
         val gapTopEdge = pipePair.y - pipeGapSize / 2
         val gapBottomEdge = pipePair.y + pipeGapSize / 2
-        val beeInGap = beeTopEdge > gapTopEdge
-                && beeBottomEdge < gapBottomEdge
+        val beeInGap = beeTopEdge > gapTopEdge && beeBottomEdge < gapBottomEdge
 
         return horizontalCollision && !beeInGap
     }
