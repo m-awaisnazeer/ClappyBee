@@ -9,13 +9,13 @@ import kotlin.random.Random
 data class Game(
     val screenWidth: Int = 0,
     val screenHeight: Int = 0,
-    val gravity: Float = 0.5f,
+    val gravity: Float = 0.3f,
     val beeRadius: Float = 30f,
-    val beeJumpImpulse: Float = -12f,
+    val beeJumpImpulse: Float = -8f,
     val beeMaxVelocity: Float = 25f,
     val pipeWidth: Float = 150f,
     val pipeVelocity: Float = 2f,
-    val pipeGapSize: Float = 250f
+    val pipeGapSize: Float = 350f
 ) {
     var status by mutableStateOf(GameStatus.Idle)
         private set
