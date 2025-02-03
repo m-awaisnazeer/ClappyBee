@@ -1,5 +1,7 @@
 package com.communisol.clappybee.domain
 
+import androidx.compose.ui.unit.IntOffset
+
 data class PipePair(
     var x: Float,
     val y: Float,
@@ -7,3 +9,4 @@ data class PipePair(
     val bottomHeight: Float,
     var scored: Boolean = false
 )
+

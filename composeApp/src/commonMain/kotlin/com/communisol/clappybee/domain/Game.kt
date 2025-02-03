@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.IntOffset
 import com.russhwolf.settings.ObservableSettings
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -15,12 +16,13 @@ data class Game(
     val screenWidth: Int = 0,
     val screenHeight: Int = 0,
     val gravity: Float = 0.3f,
-    val beeRadius: Float = 30f,
+    val beeRadius: Float = 0f,
     val beeJumpImpulse: Float = -8f,
     val beeMaxVelocity: Float = 25f,
-    val pipeWidth: Float = 150f,
+    val pipeWidth: Float = 170f,
     val pipeVelocity: Float = 2f,
-    val pipeGapSize: Float = 350f
+    val pipeGapSize: Float = 400f,
+    val pizzaSize : Int = 100
 ) : KoinComponent {
     private val settings: ObservableSettings by inject()
     var status by mutableStateOf(GameStatus.Idle)
@@ -136,14 +138,12 @@ data class Game(
     }
 
     private fun isCollision(pipePair: PipePair): Boolean {
-        // Check horizontal collision. Bee overlaps the Pipe's X range.
         val beeRightEdge = bee.x + bee.radius
         val beeLeftEdge = bee.x - bee.radius
         val pipeLeftEdge = pipePair.x - pipeWidth / 2
         val pipeRightEdge = pipePair.x + pipeWidth / 2
         val horizontalCollision = beeRightEdge > pipeLeftEdge && beeLeftEdge < pipeRightEdge
 
-        // Check if bee is within the vertical gap.
         val beeTopEdge = bee.y - bee.radius
         val beeBottomEdge = bee.y + bee.radius
         val gapTopEdge = pipePair.y - pipeGapSize / 2

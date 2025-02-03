@@ -60,6 +60,9 @@ import clappybee.composeapp.generated.resources.bee_sprite
 import clappybee.composeapp.generated.resources.moving_background
 import clappybee.composeapp.generated.resources.pipe
 import clappybee.composeapp.generated.resources.pipe_cap
+import clappybee.composeapp.generated.resources.pizza
+import clappybee.composeapp.generated.resources.suleman
+import clappybee.composeapp.generated.resources.suleman_pic
 import com.communisol.clappybee.domain.Game
 import com.communisol.clappybee.domain.GameStatus
 import com.communisol.clappybee.ui.orange
@@ -133,6 +136,8 @@ fun App() {
             mutableStateOf(0)
         }
         val pipeImage = imageResource(Res.drawable.pipe)
+        val sulemanImage = imageResource(Res.drawable.suleman_pic)
+        val centerImage = imageResource(Res.drawable.pizza)
         val pipeCapImage = imageResource(Res.drawable.pipe_cap)
 
         LaunchedEffect(game.status) {
@@ -200,63 +205,61 @@ fun App() {
                     x = game.bee.x - game.beeRadius, y = game.bee.y - game.beeRadius
                 )
             ) {
-                drawSpriteView(
-                    spriteState = spriteState,
-                    spriteSpec = spriteSpec,
-                    currentFrame = currentFrame,
-                    image = sheetImage,
-                    offset = IntOffset(
-                        x = (game.bee.x - game.beeRadius).toInt(),
-                        y = (game.bee.y - game.beeRadius).toInt()
+                drawImage(
+                    sulemanImage, dstOffset = IntOffset(
+                        x = game.bee.x.toInt(), y = game.bee.y.toInt()
+                    ), dstSize = IntSize(
+                        width = 130, height = 160
                     )
                 )
             }
             game.pipePairs.forEach {
                 drawImage(
-                    pipeImage,
-                    dstOffset = IntOffset(
-                        x = (it.x - game.pipeWidth / 2).toInt(),
-                        y = 0
-                    ),
-                    dstSize = IntSize(
+                    pipeImage, dstOffset = IntOffset(
+                        x = (it.x - game.pipeWidth / 2).toInt(), y = 0
+                    ), dstSize = IntSize(
                         width = game.pipeWidth.toInt(),
                         height = (it.topHeight - PIPE_CAP_HEIGHT).toInt()
                     )
                 )
 
                 drawImage(
-                    image = pipeCapImage,
-                    dstOffset = IntOffset(
+                    image = pipeCapImage, dstOffset = IntOffset(
                         x = (it.x - game.pipeWidth / 2).toInt(),
                         y = (it.topHeight - PIPE_CAP_HEIGHT).toInt()
-                    ),
-                    dstSize = IntSize(
-                        width = (game.pipeWidth).toInt(),
-                        height = PIPE_CAP_HEIGHT.toInt()
+                    ), dstSize = IntSize(
+                        width = (game.pipeWidth).toInt(), height = PIPE_CAP_HEIGHT.toInt()
                     )
                 )
 
                 drawImage(
-                    image = pipeCapImage,
-                    dstOffset = IntOffset(
+                    image = pipeCapImage, dstOffset = IntOffset(
                         x = (it.x - game.pipeWidth / 2).toInt(),
                         y = (it.y + game.pipeGapSize / 2).toInt()
-                    ),
-                    dstSize = IntSize(
-                        width = (game.pipeWidth).toInt(),
-                        height = PIPE_CAP_HEIGHT.toInt()
+                    ), dstSize = IntSize(
+                        width = (game.pipeWidth).toInt(), height = PIPE_CAP_HEIGHT.toInt()
                     )
                 )
 
                 drawImage(
-                    pipeImage,
-                    dstOffset = IntOffset(
+                    pipeImage, dstOffset = IntOffset(
                         x = (it.x - game.pipeWidth / 2).toInt(),
                         y = (it.y + game.pipeGapSize / 2 + PIPE_CAP_HEIGHT).toInt()
-                    ),
-                    dstSize = IntSize(
+                    ), dstSize = IntSize(
                         width = game.pipeWidth.toInt(),
                         height = (it.bottomHeight - PIPE_CAP_HEIGHT).toInt()
+                    )
+                )
+
+                val centerY =
+                    ((it.topHeight - PIPE_CAP_HEIGHT) + ((it.y + game.pipeGapSize / 2).toInt() + PIPE_CAP_HEIGHT)) / 2
+
+                drawImage(
+                    centerImage, dstOffset = IntOffset(
+                        x = (it.x - game.pipeWidth / 4).toInt(),
+                        y = centerY.toInt() - game.pizzaSize / 2
+                    ), dstSize = IntSize(
+                        width = game.pizzaSize, height = game.pizzaSize
                     )
                 )
             }
